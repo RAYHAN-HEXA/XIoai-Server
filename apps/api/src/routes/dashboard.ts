@@ -58,7 +58,9 @@ dashboardRouter.get(
         fetchPendingSettlements(user.businessId, now)
       ]);
 
-    const [cur, prev] = windows;
+    // getAuthorisedDataMany returns exactly one row per requested range
+    const cur = windows[0]!;
+    const prev = windows[1]!;
     // spec runs on the same 30-day window as `cur`; brief on a 14-day slice of it.
     const spec = composeBaseForecastSpec(now, {
       openingCashFen: business.openingCash,
