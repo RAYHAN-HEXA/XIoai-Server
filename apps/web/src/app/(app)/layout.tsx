@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { AppSidebar } from '@/components/app-sidebar';
+import { AssistantChat } from '@/components/assistant/assistant-chat';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { LogoutButton } from '@/components/logout-button';
 
@@ -16,6 +17,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         </header>
         <main className="flex-1 p-4 md:p-6">{children}</main>
       </div>
+      <AssistantChat />
     </div>
   );
 }

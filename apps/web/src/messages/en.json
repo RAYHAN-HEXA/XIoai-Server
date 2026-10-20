@@ -432,5 +432,13 @@
     "limitRateLimit": "Rate-limit and account-lockout stores are per-instance; multi-instance deployments need a shared store (Redis).",
     "limitAudit": "Audit hash-chain serialization is per-instance; multiple API instances require a database-level lock.",
     "neverClaim": "This page reports controls as implemented and their limits honestly — it is not a security guarantee."
+  },
+  "chat": {
+    "title": "XiaoCai AI Assistant",
+    "subtitle": "Scenarios & facts — never invented numbers",
+    "welcome": "Hi! I'm XiaoCai (小财). Ask me things like \"If sales drop 20% and supplier costs rise 10%, when do I run short?\" or \"How is my profit this month?\"",
+    "placeholder": "Ask a what-if or about your numbers…",
+    "send": "Send",
+    "error": "The assistant is unreachable right now — please try again."
   }
 }
