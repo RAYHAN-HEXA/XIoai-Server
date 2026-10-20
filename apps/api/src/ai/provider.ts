@@ -22,14 +22,32 @@ export class NoopProvider implements LlmProvider {
   }
 }
 
-const MODEL = 'gemini-2.5-flash';
+// Alias that always tracks the newest stable Flash model — concrete names
+// retire (gemini-2.5-flash already 404s for keys created after mid-2026).
+const MODEL = 'gemini-flash-latest';
+// Flash tier has demand-spike 503s; the lite tier is a separate capacity pool
+// and rejects thinkingConfig, so it runs with default generation settings.
+const FALLBACK_MODEL = 'gemini-flash-lite-latest';
 const API_BASE = 'https://generativelanguage.googleapis.com/v1beta';
 
 export class GeminiProvider implements LlmProvider {
   readonly name = 'gemini' as const;
 
   async complete(req: { system: string; user: string; maxTokens?: number }): Promise<string> {
-    const res = await fetch(`${API_BASE}/models/${MODEL}:generateContent`, {
+    try {
+      return await this.call(MODEL, req, true);
+    } catch (err) {
+      logger.warn({ err, model: MODEL }, 'Gemini primary model failed — trying lite fallback');
+      return this.call(FALLBACK_MODEL, req, false);
+    }
+  }
+
+  private async call(
+    model: string,
+    req: { system: string; user: string; maxTokens?: number },
+    disableThinking: boolean
+  ): Promise<string> {
+    const res = await fetch(`${API_BASE}/models/${model}:generateContent`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,9 +61,9 @@ export class GeminiProvider implements LlmProvider {
           // both want minimal variance; every number still comes from the engine.
           temperature: 0.2,
           maxOutputTokens: req.maxTokens ?? 1024,
-          // 2.5-flash "thinks" by default and burns output tokens on it — this
-          // task is structured extraction/explanation, not reasoning-heavy.
-          thinkingConfig: { thinkingBudget: 0 }
+          // Flash "thinks" by default and burns output tokens on it — this task
+          // is structured extraction/explanation, not reasoning-heavy.
+          ...(disableThinking ? { thinkingConfig: { thinkingBudget: 0 } } : {})
         }
       }),
       signal: AbortSignal.timeout(30_000)
