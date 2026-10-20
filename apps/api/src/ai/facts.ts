@@ -16,6 +16,11 @@ export interface BusinessFacts {
   windowDays: number;
   revenue30dFen: number;
   realProfit30dFen: number;
+  /** yuan forms so the LLM quotes readable currency (¥) instead of raw fen */
+  revenue30dYuan: number;
+  realProfit30dYuan: number;
+  unpaidSupplierYuan: number;
+  projectedClosingYuan: number;
   marginPct30d: number | null;
   orders30d: number;
   openingCashFen: number;
@@ -74,6 +79,10 @@ export async function collectBusinessFacts(businessId: string): Promise<Business
     windowDays: 30,
     revenue30dFen: profit.summary.revenue,
     realProfit30dFen: profit.summary.realProfit,
+    revenue30dYuan: Math.round(profit.summary.revenue) / 100,
+    realProfit30dYuan: Math.round(profit.summary.realProfit) / 100,
+    unpaidSupplierYuan: Math.round(unpaidAgg._sum.amount ?? 0) / 100,
+    projectedClosingYuan: Math.round(forecast.closingBalanceFen) / 100,
     marginPct30d: profit.summary.marginPct,
     orders30d: profit.meta.ordersIncluded,
     openingCashFen: business.openingCash,
