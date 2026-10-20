@@ -27,8 +27,12 @@ export function templateDrivers(top: Array<{ label: { en: string; zh: string }; 
 
 export const TEMPLATES = {
   needsClarification: {
-    en: 'I could not read precise numbers from your question. Try: "If sales drop 20% and supplier costs rise 10%, when do I run short?" — or use the sliders in the Survival Simulator.',
-    zh: '未能从问题中识别出明确的数字。试试：“如果销售下降20%、供应商成本上升10%，我会什么时候缺钱？”或直接使用生存模拟器的滑块。'
+    en: 'I could not map that to a scenario. I answer what-if questions like: "If sales drop 20% and supplier costs rise 10%, when do I run short?" or "What if payouts are 15 days slower?" — or use the sliders in the Survival Simulator.',
+    zh: '未能将该问题映射为情景假设。我可以回答这类问题：“如果销售下降20%、供应商成本上升10%，我会什么时候缺钱？”“如果回款慢15天会怎样？”或直接使用生存模拟器的滑块。'
+  },
+  dataNotScenario: {
+    en: 'That looks like a data request, not a what-if scenario — the simulator only projects futures, it never invents numbers. Your actual records are on the Dashboard (GMV, settled cash, obligations), Data Sources, and Audit Log pages. To simulate, try: "If sales drop 20% and supplier costs rise 10%, when do I run short?"',
+    zh: '这看起来是在要数据，而不是情景假设——模拟器只推演未来，绝不编造数字。您的真实记录请看仪表盘（GMV、已结算现金、供应商义务）、数据源和审计日志页面。要模拟，请试试：“如果销售下降20%、供应商成本上升10%，我会什么时候缺钱？”'
   },
   llmUnavailable: {
     en: 'AI explanations are currently unavailable — all numbers above still come from the deterministic engine.',

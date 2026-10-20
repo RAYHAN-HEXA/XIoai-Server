@@ -49,7 +49,13 @@ assistantRouter.post(
       return;
     }
     if (!parsed.ok || !parsed.params) {
-      res.json({ status: 'NEEDS_CLARIFICATION', answer: TEMPLATES.needsClarification[lang], params: null });
+      // If the phrasing asks for existing data rather than a what-if, point at
+      // the pages that actually hold records — unless scenario words are also
+      // present, in which case the generic clarification examples serve better.
+      const asksForData = /\b(give|show|pull|send)\s+me\b|\b(last|latest|history|historical|export|download|report|records?)\b|\bdata\b/i.test(body.question);
+      const isScenario = /\b(what if|if |drop|fall|rises?|increase|decrease|simulat)\b|如果|假如|下降|上升|增加|减少|模拟/i.test(body.question);
+      const answer = asksForData && !isScenario ? TEMPLATES.dataNotScenario[lang] : TEMPLATES.needsClarification[lang];
+      res.json({ status: 'NEEDS_CLARIFICATION', answer, params: null });
       return;
     }
 
